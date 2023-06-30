@@ -38,21 +38,21 @@ def gen_globals(code: str, length: int)->str:
     return code
 
 def gen_tampering_code(code: str, length: int) -> str:
-    return code + f"""    void table_tamper() {{
-        for (int i = 0; i < {length}; i++) {{
-            a[i]++;
-            b[i]++;
-            r[i]++;
-        }}
-    }}\n"""
+    return code + f"""void table_tamper() {{
+    for (int i = 0; i < {length}; i++) {{
+        a[i]++;
+        b[i]++;
+        r[i]++;
+    }}
+}}\n"""
 
 
 def gen_cache_killing_function(code: str, length: int) -> str:
     code = _append_loc(code, "int f0() {")
-    code = _append_loc(code,    "r[0] = a[0] + b[0];")
+    code = _append_loc(code,    "    r[0] = a[0] + b[0];")
     for i in range(1, length):
-        code = _append_loc(code, f"r[{i}] = a[{randint(0, length - 1)}] {choice(['+', '*', '-', '/'])} b[{randint(0, length - 1)}];")
-    code = _append_loc(code, f"return {'+'.join([f'r[{i}]' for i in range(length)])};")
+        code = _append_loc(code, f"    r[{i}] = a[{randint(0, length - 1)}] {choice(['+', '*', '-', '/'])} b[{randint(0, length - 1)}];")
+    code = _append_loc(code, f"    return {'+'.join([f'r[{i}]' for i in range(length)])};")
     code = _append_loc(code, "}")
     return code
 
